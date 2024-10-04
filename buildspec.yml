@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - npm install -g @angular/cli@14.1.3
+  pre_build:
+    commands:
+      - npm install
+  build:
+    commands:
+      - ng build
+    finally:
+      - echo final block echo
+  post_build:
+      commands:
+        - echo build process finished, we should uplload to S3 now
+        - cd dist/rediscover-ui
+        - ls -la
+        - aws s3 sync . s3://rediscovertelevisionweb --delete
+artifacts:
+  base-directory: dist/rediscover-ui
+  files:
+    - '**/*'
